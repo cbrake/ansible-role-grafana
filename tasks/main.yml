@@ -1,0 +1,54 @@
+- name: create install dir
+  file:
+    path: "{{ install_base }}"
+    state: directory
+
+- name: create grafana group
+  group:
+    name: grafana
+    state: present
+
+- name: create grafana user
+  user:
+    name: grafana
+    group: grafana
+    createhome: false
+
+- name: fetch grafana
+  get_url:
+    url: https://s3-us-west-2.amazonaws.com/grafana-releases/release/grafana-{{ ver }}.linux-amd64.tar.gz
+    dest: "{{ tarball_loc }}"
+  register: fetch
+
+- name: extract grafana
+  unarchive:
+    src: "{{ tarball_loc }}"
+    dest: "{{ install_base }}"
+    copy: no
+    owner: grafana
+    group: grafana
+  when: fetch.changed
+  notify: restart grafana
+
+- name: create /var/lib dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: grafana
+  with_items:
+    - /var/log/grafana
+    - /var/lib/grafana
+    - /var/lib/grafana/plugins
+
+- name: grafana config
+  template: src=grafana.ini.j2 dest={{ install_dir }}/conf/custom.ini owner=grafana
+  notify: restart grafana
+
+- name: grafana service file
+  template: src=grafana.service.j2 dest=/etc/systemd/system/grafana.service
+  notify:
+    - restart grafana
+    - reload systemd
+
+- name: start grafana
+  service: name=grafana state=started enabled=yes
