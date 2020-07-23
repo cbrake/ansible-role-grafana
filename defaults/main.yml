@@ -1,4 +1,4 @@
-ver: 6.6.0
+ver: 7.1.0
 tarball_loc: /root/grafana-{{ ver }}.tar.gz
 install_base: /opt
 install_dir: "{{ install_base }}/grafana-{{ ver }}"
