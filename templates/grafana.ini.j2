@@ -279,15 +279,15 @@ root_url = http://iot.bec-systems.com:3000
 #################################### SMTP / Emailing ##########################
 [smtp]
 enabled = true
-host = smtp.mailgun.org:587
-user = gogs@mg.bec-systems.com
+host = {{ smtp_host }}
+user = {{ smtp_user }}
 # If the password contains # or ; you have to wrap it with trippel quotes. Ex """#password;"""
-password = sonWZmpG
+password = {{ smtp_pass }}
 ;cert_file =
 ;key_file =
 ;skip_verify = false
-from_address = info@bec-systems.com
-from_name = BEC Systems
+from_address = {{ smtp_from_address }}
+from_name = {{ smtp_from_name }}
 
 [emails]
 welcome_email_on_sign_up = true
