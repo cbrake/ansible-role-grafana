@@ -12,10 +12,10 @@ Group=grafana
 Type=simple
 Restart=on-failure
 WorkingDirectory={{ install_dir }}
-ExecStart={{ install_dir }}/bin/grafana-server \
-                            cfg:default.paths.logs=/var/log/grafana \
-                            cfg:default.paths.data=/var/lib/grafana \
-                            cfg:default.paths.plugins=/var/lib/grafana/plugins
+ExecStart={{ install_dir }}/bin/grafana-server --config={{ config_dir }}/grafana.ini \
+                            cfg:default.paths.logs={{ log_dir }} \
+                            cfg:default.paths.data={{ data_dir }} \
+                            cfg:default.paths.plugins={{ data_dir }}/plugins
 LimitNOFILE=10000
 TimeoutStopSec=20
 

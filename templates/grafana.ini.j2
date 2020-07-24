@@ -33,10 +33,10 @@
 ;http_addr =
 
 # The http port  to use
-;http_port = 3000
+http_port = {{ http_port }}
 
 # The public facing domain name used to access grafana from a browser
-domain = iot.bec-systems.com
+domain = {{ domain }}
 
 # Redirect to correct domain if host header does not match domain
 # Prevents DNS rebinding attacks
@@ -44,7 +44,7 @@ domain = iot.bec-systems.com
 
 # The full public facing url you use in browser, used for redirects and emails
 # If you use reverse proxy and sub path specify full url (with sub path)
-root_url = http://iot.bec-systems.com:3000
+root_url = {{ root_url }}
 
 # Log web requests
 ;router_logging = false

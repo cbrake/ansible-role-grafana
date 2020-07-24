@@ -18,3 +18,10 @@ example usage in playbook:
         smtp_from_address: info@myhost
         smtp_from_name: Grafana
 ```
+
+The default admin user is:
+
+- user: `admin`
+- pass: `admin`
+
+You will be prompted to change the admin password on first login.
