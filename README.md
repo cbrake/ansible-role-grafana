@@ -17,6 +17,8 @@ example usage in playbook:
         smtp_pass: smtppass
         smtp_from_address: info@myhost
         smtp_from_name: Grafana
+        domain: mydomain.com
+        root_url: https://mydomain.com
 ```
 
 The default admin user is:
