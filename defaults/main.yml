@@ -1,5 +1,6 @@
 ver: 8.3.6
 tarball_loc: /root/grafana-{{ ver }}.tar.gz
+service_name: grafana
 install_base: /opt
 install_dir: "{{ install_base }}/grafana-{{ ver }}"
 smtp_host: ""
@@ -9,8 +10,7 @@ smtp_from_address: ""
 smtp_from_name: ""
 # the following settings are useful if you want to run two grafana
 # instances on one server
-data_dir: /var/lib/grafana
-log_dir: /var/log/grafana
-config_dir: /etc/grafana
+data_dir: /var/lib/{{ service_name }}
+log_dir: /var/log/{{ service_name }}
+config_dir: /etc/{{ service_name }}
 http_port: 3000
-service_name: grafana
