@@ -1,4 +1,4 @@
-ver: 9.1.7
+ver: 9.2.5
 tarball_loc: /root/grafana-{{ ver }}.tar.gz
 service_name: grafana
 install_base: /opt
