@@ -1,8 +1,8 @@
-ver: 10.1.2
+ver: 10.2.3
 tarball_loc: /root/grafana-{{ ver }}.tar.gz
 service_name: grafana
 install_base: /opt
-install_dir: "{{ install_base }}/grafana-{{ ver }}"
+install_dir: "{{ install_base }}/grafana-v{{ ver }}"
 smtp_host: ""
 smtp_user: ""
 smtp_pass: ""
