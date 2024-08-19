@@ -1,4 +1,4 @@
-- name: reload systemd
+- name: reload systemd grafana
   command: systemctl daemon-reload
 
 - name: restart grafana

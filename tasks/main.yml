@@ -45,7 +45,7 @@
   template:
     src=grafana.service.j2 dest=/etc/systemd/system/{{ service_name }}.service
   notify:
-    - reload systemd
+    - reload systemd grafana
     - restart grafana
 
 - name: grafana config
@@ -54,3 +54,5 @@
 
 - name: start grafana
   service: name={{ service_name }} state=started enabled=yes
+
+
