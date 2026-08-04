@@ -1,0 +1,11 @@
+[Unit]
+Description=Nightly restart of the {{ service_name }} service
+
+[Timer]
+# Servers run in UTC and systemd on AlmaLinux 8 predates timezone suffixes in
+# OnCalendar, so the schedule is expressed in UTC. 04:00 UTC is midnight EDT.
+OnCalendar={{ restart_oncalendar }}
+Persistent=false
+
+[Install]
+WantedBy=timers.target

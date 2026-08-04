@@ -14,3 +14,7 @@ data_dir: /var/lib/{{ service_name }}
 log_dir: /var/log/{{ service_name }}
 config_dir: /etc/{{ service_name }}
 http_port: 3000
+# nightly restart timer, opt-in per host -- 04:00 UTC is midnight EDT
+# (servers run in UTC)
+restart_timer: false
+restart_oncalendar: "*-*-* 04:00:00"

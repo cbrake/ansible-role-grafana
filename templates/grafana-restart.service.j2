@@ -1,0 +1,11 @@
+[Unit]
+Description=Restart the {{ service_name }} service
+# Deliberately no After=/Requisite= on {{ service_name }}.service: an ordering
+# dependency would have systemd stop this unit as part of taking grafana down,
+# which surfaces as a spurious failure. try-restart already no-ops when the
+# service is not running, and --no-block lets this unit exit before the
+# restart job runs.
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl try-restart --no-block {{ service_name }}.service
