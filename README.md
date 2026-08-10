@@ -27,3 +27,31 @@ The default admin user is:
 - pass: `admin`
 
 You will be prompted to change the admin password on first login.
+
+## Data source provisioning
+
+Data sources can be described in the playbook rather than clicked into the UI.
+Each entry in `datasources` is written to Grafana's provisioning directory,
+which Grafana reads at start-up:
+
+```
+    - role: grafana
+      tags: grafana
+      vars:
+        datasources:
+          - name: VictoriaMetrics
+            type: prometheus
+            url: http://localhost:8428
+            is_default: true
+```
+
+`type` is any Grafana data source type; VictoriaMetrics uses `prometheus`, since
+it serves the Prometheus query API and needs no plugin. `json_data` passes
+type-specific settings through as a mapping. A provisioned data source cannot be
+edited in the UI, which is what keeps the playbook the description of what
+exists.
+
+## Binding to localhost
+
+Set `http_addr: 127.0.0.1` when Grafana is reached only through a reverse proxy
+on the same host. The default is empty, which binds every interface.

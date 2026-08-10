@@ -40,6 +40,18 @@
     - "{{ data_dir }}"
     - "{{ data_dir}}/plugins"
     - "{{ config_dir}}"
+    - "{{ provisioning_dir }}"
+    - "{{ provisioning_dir }}/datasources"
+    - "{{ provisioning_dir }}/dashboards"
+
+- name: provision grafana data sources
+  template:
+    src: datasources.yaml.j2
+    dest: "{{ provisioning_dir }}/datasources/ansible.yaml"
+    owner: grafana
+    mode: "0640"
+  when: datasources | length > 0
+  notify: restart grafana
 
 - name: grafana service file
   template:

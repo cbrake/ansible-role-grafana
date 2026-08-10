@@ -30,7 +30,7 @@
 ;protocol = http
 
 # The ip address to bind to, empty will bind to all interfaces
-;http_addr =
+http_addr = {{ http_addr }}
 
 # The http port  to use
 http_port = {{ http_port }}
@@ -278,7 +278,9 @@ root_url = {{ root_url }}
 
 #################################### SMTP / Emailing ##########################
 [smtp]
-enabled = true
+# leaving smtp_host empty runs Grafana without mail rather than with a mailer
+# that cannot connect
+enabled = {{ 'true' if smtp_host else 'false' }}
 host = {{ smtp_host }}
 user = {{ smtp_user }}
 # If the password contains # or ; you have to wrap it with trippel quotes. Ex """#password;"""

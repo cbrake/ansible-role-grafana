@@ -1,0 +1,20 @@
+# managed by ansible -- ansible-role-grafana
+#
+# Grafana reads this at start-up. A data source listed here cannot be edited in
+# the UI, which is what keeps this file the description of what exists.
+apiVersion: 1
+
+datasources:
+{% for ds in datasources %}
+  - name: {{ ds.name }}
+    type: {{ ds.type }}
+    access: proxy
+    url: {{ ds.url }}
+    isDefault: {{ ds.is_default | default(false) | lower }}
+{% if ds.json_data is defined %}
+    jsonData:
+{% for k, v in ds.json_data.items() %}
+      {{ k }}: {{ v }}
+{% endfor %}
+{% endif %}
+{% endfor %}

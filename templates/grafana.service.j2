@@ -16,7 +16,8 @@ WorkingDirectory={{ install_dir }}
 ExecStart={{ install_dir }}/bin/grafana server --config={{ config_dir }}/grafana.ini \
                             cfg:default.paths.logs={{ log_dir }} \
                             cfg:default.paths.data={{ data_dir }} \
-                            cfg:default.paths.plugins={{ data_dir }}/plugins
+                            cfg:default.paths.plugins={{ data_dir }}/plugins \
+                            cfg:default.paths.provisioning={{ provisioning_dir }}
 LimitNOFILE=10000
 TimeoutStopSec=20
 
