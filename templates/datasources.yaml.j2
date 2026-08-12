@@ -1,16 +1,34 @@
 # managed by ansible -- ansible-role-grafana
 #
-# Grafana reads this at start-up. A data source listed here cannot be edited in
-# the UI, which is what keeps this file the description of what exists.
+# Grafana imports this on start rather than reading it as it serves requests, so
+# an edit takes effect on the next restart, and the imported copy replaces
+# changes made in the UI.
 apiVersion: 1
 
+{% if delete_datasources | default([]) %}
+# Deletes run before the additions below. Grafana updates an existing data
+# source by uid, so giving a uid to one that was already provisioned without
+# one fails with "data source not found" and takes the provisioning module
+# down with it. Retiring the old record by name is the way through that.
+deleteDatasources:
+{% for ds in delete_datasources %}
+  - name: {{ ds.name }}
+    orgId: {{ ds.org_id | default(1) }}
+{% endfor %}
+
+{% endif %}
 datasources:
 {% for ds in datasources %}
   - name: {{ ds.name }}
+{% if ds.uid is defined %}
+    # Dashboards reference this uid, so keep it stable
+    uid: {{ ds.uid }}
+{% endif %}
     type: {{ ds.type }}
     access: proxy
     url: {{ ds.url }}
     isDefault: {{ ds.is_default | default(false) | lower }}
+    editable: {{ ds.editable | default(false) | lower }}
 {% if ds.json_data is defined %}
     jsonData:
 {% for k, v in ds.json_data.items() %}

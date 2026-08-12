@@ -55,3 +55,28 @@ exists.
 
 Set `http_addr: 127.0.0.1` when Grafana is reached only through a reverse proxy
 on the same host. The default is empty, which binds every interface.
+
+### Changing a uid
+
+Grafana updates a provisioned data source by uid, so giving a uid to one that
+was already provisioned without one, or changing the uid of an existing one,
+fails with `Datasource provisioning error: data source not found`. That failure
+takes the whole provisioning module down and leaves Grafana restarting, so it is
+worth recognising. Retire the old record by name in the same pass, which Grafana
+applies before the additions:
+
+```yaml
+- role: grafana
+  tags: grafana
+  vars:
+    delete_datasources:
+      - name: VictoriaMetrics
+    datasources:
+      - name: VictoriaMetrics
+        uid: victoriametrics
+        type: prometheus
+        url: http://localhost:8428
+```
+
+Once no such record exists, the `delete_datasources` entry has nothing to do and
+can come out again.
