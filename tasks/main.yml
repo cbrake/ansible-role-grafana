@@ -14,11 +14,16 @@
     group: grafana
     createhome: false
 
+# The release host closes a connection now and then, so give it a few attempts
+# before ending the deploy at this task.
 - name: fetch grafana
   get_url:
     url: https://dl.grafana.com/oss/release/grafana-{{ ver }}.linux-amd64.tar.gz
     dest: "{{ tarball_loc }}"
   register: fetch
+  until: fetch is succeeded
+  retries: 3
+  delay: 5
 
 - name: extract grafana
   unarchive:
