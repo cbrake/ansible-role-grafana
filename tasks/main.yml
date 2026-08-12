@@ -14,17 +14,27 @@
     group: grafana
     createhome: false
 
-# The release host closes a connection now and then, so give it a few attempts
-# before ending the deploy at this task.
+- name: look for a cached grafana release
+  stat:
+    path: "{{ tarball_loc }}"
+  register: grafana_cached
+
+# get_url makes a conditional request even when the destination exists, and that
+# request fails the play when the release host is unavailable, so skip the task
+# outright once the tarball for this version is on disk. The retries cover a
+# connection dropped while actually downloading.
 - name: fetch grafana
   get_url:
     url: https://dl.grafana.com/oss/release/grafana-{{ ver }}.linux-amd64.tar.gz
     dest: "{{ tarball_loc }}"
+  when: not grafana_cached.stat.exists
   register: fetch
   until: fetch is succeeded
   retries: 3
   delay: 5
 
+# Guarded on the extracted binary rather than on the fetch reporting a change,
+# so a tarball that is already cached but not yet unpacked still gets unpacked.
 - name: extract grafana
   unarchive:
     src: "{{ tarball_loc }}"
@@ -32,7 +42,7 @@
     copy: no
     owner: grafana
     group: grafana
-  when: fetch.changed
+    creates: "{{ install_dir }}/bin/grafana"
   notify: restart grafana
 
 - name: create dirs
