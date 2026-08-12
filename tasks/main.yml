@@ -58,6 +58,55 @@
   when: datasources | length > 0
   notify: restart grafana
 
+- name: create dashboard dir
+  file:
+    path: "{{ dashboards_dir }}"
+    state: directory
+    owner: grafana
+    mode: "0755"
+  when: dashboards_src != ""
+
+- name: install dashboards
+  copy:
+    src: "{{ item }}"
+    dest: "{{ dashboards_dir }}/{{ item | basename }}"
+    owner: grafana
+    mode: "0644"
+  with_fileglob: "{{ dashboards_src }}/*.json"
+  when: dashboards_src != ""
+  notify: restart grafana
+
+- name: list installed dashboards
+  find:
+    paths: "{{ dashboards_dir }}"
+    patterns: ["*.json"]
+  register: grafana_dashboards_installed
+  when: dashboards_src != ""
+
+# A dashboard removed from the repo is removed here, so the repo is the whole
+# description of what Grafana shows.
+- name: remove dashboards no longer in the repo
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ grafana_dashboards_installed.files | default([]) }}"
+  loop_control:
+    label: "{{ item.path }}"
+  when:
+    - dashboards_src != ""
+    - item.path | basename not in (query('fileglob', dashboards_src + '/*.json')
+      | map('basename') | list)
+  notify: restart grafana
+
+- name: provision dashboard provider
+  template:
+    src: dashboards.yaml.j2
+    dest: "{{ provisioning_dir }}/dashboards/ansible.yaml"
+    owner: grafana
+    mode: "0640"
+  when: dashboards_src != ""
+  notify: restart grafana
+
 - name: grafana service file
   template:
     src=grafana.service.j2 dest=/etc/systemd/system/{{ service_name }}.service

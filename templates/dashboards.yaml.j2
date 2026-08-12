@@ -1,0 +1,21 @@
+# managed by ansible -- ansible-role-grafana
+#
+# Grafana imports the dashboards in the path below on start and reapplies them
+# on each poll, so the installed copy stays authoritative. To keep a change made
+# in the UI, put it in the JSON file in the playbook repo rather than leaving it
+# in Grafana.
+apiVersion: 1
+
+providers:
+  - name: ansible
+    orgId: 1
+    folder: ""
+    type: file
+    # A dashboard removed from the repo is removed from Grafana too, so the
+    # installed set stays the whole set
+    disableDeletion: false
+    allowUiUpdates: {{ dashboards_allow_ui_updates | lower }}
+    updateIntervalSeconds: {{ dashboards_poll_seconds }}
+    options:
+      path: {{ dashboards_dir }}
+      foldersFromFilesStructure: false

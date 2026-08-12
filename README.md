@@ -80,3 +80,21 @@ applies before the additions:
 
 Once no such record exists, the `delete_datasources` entry has nothing to do and
 can come out again.
+
+## Dashboard provisioning
+
+`dashboards_src` names a directory in the playbook repo holding dashboard JSON
+files. The role installs them to `dashboards_dir`, removes any the repo no
+longer has, and writes a provider to the provisioning directory, so Grafana
+imports them on start and reapplies them on each poll:
+
+```yaml
+- role: grafana
+  tags: grafana
+  vars:
+    dashboards_src: dashboards/myserver
+```
+
+The installed copy is authoritative, so a restart returns a dashboard to what
+the repo says. `dashboards_allow_ui_updates` defaults to true, which leaves
+panel edits available in the UI for working out what to commit next.

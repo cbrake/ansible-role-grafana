@@ -31,6 +31,19 @@ http_addr: ""
 #       is_default: true
 #
 datasources: []
+
+# Dashboards. dashboards_src is a directory in the playbook repo holding
+# dashboard JSON files; they are installed to dashboards_dir and a provider is
+# written to the provisioning directory so Grafana imports them on start and
+# reapplies them on each poll. Leave "" to manage dashboards in the UI.
+dashboards_src: ""
+dashboards_dir: "{{ config_dir }}/dashboards"
+# The imported copy is authoritative, so a restart returns a dashboard to what
+# the repo says. Edits are still allowed in the UI, which is how you work out
+# what to commit next.
+dashboards_allow_ui_updates: true
+dashboards_poll_seconds: 30
+
 # nightly restart timer, opt-in per host -- 04:00 UTC is midnight EDT
 # (servers run in UTC)
 restart_timer: false
