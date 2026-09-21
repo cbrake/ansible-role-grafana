@@ -19,6 +19,10 @@ ExecStart={{ install_dir }}/bin/grafana server --config={{ config_dir }}/grafana
                             cfg:default.paths.plugins={{ data_dir }}/plugins \
                             cfg:default.paths.provisioning={{ provisioning_dir }}
 LimitNOFILE=10000
+{% if memory_max_mb | int > 0 %}
+MemoryMax={{ memory_max_mb }}M
+Environment=GOMEMLIMIT={{ (memory_max_mb | int * 0.8) | int }}MiB
+{% endif %}
 TimeoutStopSec=20
 
 [Install]

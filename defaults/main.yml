@@ -19,6 +19,12 @@ http_port: 3000
 # when Grafana is only reached through a reverse proxy on the same host.
 http_addr: ""
 
+# Memory ceiling for the service, in megabytes, set as systemd's MemoryMax so
+# the kernel stops Grafana growing past it. GOMEMLIMIT is set to 80% of it, so
+# the Go garbage collector works harder as the heap nears the ceiling rather
+# than the service being killed on reaching it. 0 leaves both unset.
+memory_max_mb: 0
+
 # Data sources written to the provisioning directory, so what exists is
 # described here rather than clicked into the UI. A provisioned data source
 # cannot be edited in the UI. Each entry takes name, type, url, and optionally
