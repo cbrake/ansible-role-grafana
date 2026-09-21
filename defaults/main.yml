@@ -19,10 +19,13 @@ http_port: 3000
 # when Grafana is only reached through a reverse proxy on the same host.
 http_addr: ""
 
-# Memory ceiling for the service, in megabytes, set as systemd's MemoryMax so
-# the kernel stops Grafana growing past it. GOMEMLIMIT is set to 80% of it, so
-# the Go garbage collector works harder as the heap nears the ceiling rather
-# than the service being killed on reaching it. 0 leaves both unset.
+# Memory ceilings for the service, in megabytes. memory_high_mb sets systemd's
+# MemoryHigh: above it the kernel reclaims Grafana's memory and slows its
+# allocations, but does not kill it. memory_max_mb sets MemoryMax, the hard
+# ceiling at which it is killed. GOMEMLIMIT is set to 80% of the lower of the
+# two, so the Go garbage collector works harder before either is reached. 0
+# leaves a setting unset.
+memory_high_mb: 0
 memory_max_mb: 0
 
 # Data sources written to the provisioning directory, so what exists is
