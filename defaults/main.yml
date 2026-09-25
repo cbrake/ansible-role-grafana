@@ -50,7 +50,7 @@ dashboards_dir: "{{ config_dir }}/dashboards"
 dashboards_allow_ui_updates: true
 dashboards_poll_seconds: 30
 
-# nightly restart timer, opt-in per host -- 04:00 UTC is midnight EDT
-# (servers run in UTC)
+# restart timer, opt-in per host -- every 6 hours starting at 04:00 UTC,
+# which is midnight EDT (servers run in UTC)
 restart_timer: false
-restart_oncalendar: "*-*-* 04:00:00"
+restart_oncalendar: "*-*-* 04,10,16,22:00:00"

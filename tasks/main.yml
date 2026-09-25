@@ -131,7 +131,7 @@
 - name: start grafana
   service: name={{ service_name }} state=started enabled=yes
 
-- name: grafana nightly restart units
+- name: grafana restart units
   template:
     src: "grafana-restart.{{ item }}.j2"
     dest: "/etc/systemd/system/{{ service_name }}-restart.{{ item }}"
@@ -144,24 +144,24 @@
 - name: flush handlers so the restart timer sees current units
   meta: flush_handlers
 
-- name: enable grafana nightly restart timer
+- name: enable grafana restart timer
   systemd:
     name: "{{ service_name }}-restart.timer"
     state: started
     enabled: yes
   when: restart_timer
 
-- name: remove grafana nightly restart timer
+- name: remove grafana restart timer
   when: not restart_timer
   block:
-    - name: stop grafana nightly restart timer
+    - name: stop grafana restart timer
       systemd:
         name: "{{ service_name }}-restart.timer"
         state: stopped
         enabled: no
       failed_when: false
 
-    - name: delete grafana nightly restart units
+    - name: delete grafana restart units
       file:
         path: "/etc/systemd/system/{{ service_name }}-restart.{{ item }}"
         state: absent
